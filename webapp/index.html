@@ -1,0 +1,780 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Hotel Management System</title>
+    <meta name="description"
+        content="Premium Hotel Management System — manage rooms, bookings and checkouts from one elegant dashboard." />
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap"
+        rel="stylesheet" />
+    <link rel="stylesheet" href="style.css" />
+</head>
+
+<body>
+
+    
+    <div id="loginPage" class="login-page">
+
+        
+        <div class="blob blob-1"></div>
+        <div class="blob blob-2"></div>
+        <div class="blob blob-3"></div>
+
+        <div class="login-card">
+            <div class="login-logo">
+                <span class="logo-icon">🏨</span>
+            </div>
+            <h1 class="login-title">Welcome Back</h1>
+            <p class="login-subtitle">Sign in to Hotel Management System</p>
+
+            <div id="loginError" class="login-error hidden">
+                ⚠️ Invalid credentials. Try <strong>admin / admin123</strong>.
+            </div>
+
+            <div class="login-form">
+                <div class="login-field">
+                    <label for="loginUser">Username</label>
+                    <div class="input-icon-wrap">
+                        <span class="input-icon"></span>
+                        <input type="text" id="loginUser" placeholder="Enter username" autocomplete="username" />
+                    </div>
+                </div>
+
+                <div class="login-field">
+                    <label for="loginPass">Password</label>
+                    <div class="input-icon-wrap">
+                        <span class="input-icon"></span>
+                        <input type="password" id="loginPass" placeholder="Enter password"
+                            autocomplete="current-password" />
+                    </div>
+                </div>
+
+                <button class="btn-login" onclick="doLogin()">
+                    <span>Sign In</span>
+                    <span class="btn-arrow">→</span>
+                </button>
+            </div>
+
+            <p class="login-hint">Demo credentials: <code>admin</code> / <code>admin123</code></p>
+        </div>
+    </div>
+
+    
+    <div id="dashboardPage" class="dashboard-page hidden">
+
+        
+        <aside class="sidebar" id="sidebar">
+            <div class="sidebar-header">
+                <div class="sidebar-logo">
+                    <span class="sidebar-logo-icon">🏨</span>
+                    <div class="sidebar-logo-text">
+                        <span class="sidebar-brand">LuxeStay</span>
+                        <span class="sidebar-tagline">Management Suite</span>
+                    </div>
+                </div>
+                <button class="sidebar-toggle" id="sidebarToggle" onclick="toggleSidebar()"
+                    title="Collapse sidebar">&#8249;</button>
+            </div>
+
+            <nav class="sidebar-nav">
+                <div class="nav-section-label">Main</div>
+
+                <button class="nav-item active" id="nav-dashboard" data-title="Dashboard"
+                    data-crumb="Overview of your hotel" onclick="showSection('dashboard', this)">
+                    <span class="nav-icon">📊</span>
+                    <span class="nav-label">Dashboard</span>
+                </button>
+
+                <button class="nav-item" id="nav-addRoom" data-title="Add Room" data-crumb="Register a new room"
+                    onclick="showSection('addRoom', this)">
+                    <span class="nav-icon">➕</span>
+                    <span class="nav-label">Add Room</span>
+                </button>
+
+                <button class="nav-item" id="nav-viewRooms" data-title="View Rooms" data-crumb="All registered rooms"
+                    onclick="showSection('viewRooms', this)">
+                    <span class="nav-icon">🛏</span>
+                    <span class="nav-label">View Rooms</span>
+                </button>
+
+                <div class="nav-section-label">Operations</div>
+
+                <button class="nav-item" id="nav-bookRoom" data-title="Book Room" data-crumb="Create a new booking"
+                    onclick="showSection('bookRoom', this)">
+                    <span class="nav-icon">📋</span>
+                    <span class="nav-label">Book Room</span>
+                </button>
+
+                <button class="nav-item" id="nav-checkout" data-title="Checkout"
+                    data-crumb="Checkout a guest &amp; generate bill" onclick="showSection('checkout', this)">
+                    <span class="nav-icon">🧾</span>
+                    <span class="nav-label">Checkout</span>
+                </button>
+
+                <button class="nav-item" id="nav-bookings" data-title="All Bookings"
+                    data-crumb="Currently active bookings" onclick="showSection('bookings', this)">
+                    <span class="nav-icon">📊</span>
+                    <span class="nav-label">All Bookings</span>
+                </button>
+            </nav>
+
+            <div class="sidebar-footer">
+                <div class="user-chip">
+                    <div class="user-avatar">A</div>
+                    <div class="user-info">
+                        <span class="user-name">Admin</span>
+                        <span class="user-role">Hotel Manager</span>
+                    </div>
+                </div>
+                <button class="btn-logout" onclick="doLogout()" title="Logout">&#9211;</button>
+            </div>
+        </aside>
+
+        
+        <main class="main-content" id="mainContent">
+
+            
+            <header class="topbar">
+                <div class="topbar-left">
+                    <button class="mobile-menu-btn" onclick="toggleSidebar()">&#9776;</button>
+                    <div>
+                        <h2 class="page-title" id="pageTitle">Dashboard</h2>
+                        <p class="page-breadcrumb" id="pageBreadcrumb">Overview of your hotel</p>
+                    </div>
+                </div>
+                <div class="topbar-date" id="topbarDate"></div>
+            </header>
+
+            
+            <section id="sec-dashboard" class="content-section active">
+                <div class="stats-grid">
+                    <div class="stat-card stat-blue">
+                        <div class="stat-icon">🛏</div>
+                        <div class="stat-body">
+                            <div class="stat-value" id="statTotal">—</div>
+                            <div class="stat-label">Total Rooms</div>
+                        </div>
+                    </div>
+                    <div class="stat-card stat-green">
+                        <div class="stat-icon">✅</div>
+                        <div class="stat-body">
+                            <div class="stat-value" id="statAvailable">—</div>
+                            <div class="stat-label">Available</div>
+                        </div>
+                    </div>
+                    <div class="stat-card stat-red">
+                        <div class="stat-icon">🔴</div>
+                        <div class="stat-body">
+                            <div class="stat-value" id="statBooked">—</div>
+                            <div class="stat-label">Booked</div>
+                        </div>
+                    </div>
+                    <div class="stat-card stat-amber">
+                        <div class="stat-icon">💰</div>
+                        <div class="stat-body">
+                            <div class="stat-value" id="statRevenue">—</div>
+                            <div class="stat-label">Potential Revenue / Night</div>
+                        </div>
+                    </div>
+                </div>
+
+                <div class="dash-grid">
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Recent Bookings</h3>
+                            <button class="btn-sm"
+                                onclick="showSection('bookings', document.getElementById('nav-bookings'))">View All
+                                →</button>
+                        </div>
+                        <div class="table-wrap">
+                            <table>
+                                <thead>
+                                    <tr>
+                                        <th>Room</th>
+                                        <th>Guest</th>
+                                        <th>Nights</th>
+                                        <th>Total</th>
+                                    </tr>
+                                </thead>
+                                <tbody id="dashBookingsBody">
+                                    <tr>
+                                        <td colspan="4" class="empty">Loading…</td>
+                                    </tr>
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <h3>Room Occupancy</h3>
+                        </div>
+                        <div class="occupancy-chart">
+                            <div class="donut-wrap">
+                                <svg class="donut" viewBox="0 0 120 120">
+                                    <circle class="donut-bg" cx="60" cy="60" r="45" />
+                                    <circle class="donut-fill donut-available" cx="60" cy="60" r="45"
+                                        stroke-dasharray="282.74" stroke-dashoffset="0" id="donutAvailable" />
+                                    <circle class="donut-fill donut-booked" cx="60" cy="60" r="45" stroke-dasharray="0"
+                                        stroke-dashoffset="0" id="donutBooked" />
+                                </svg>
+                                <div class="donut-center" id="donutLabel">—</div>
+                            </div>
+                            <div class="donut-legend">
+                                <div class="legend-item"><span class="legend-dot dot-available"></span> Available</div>
+                                <div class="legend-item"><span class="legend-dot dot-booked"></span> Booked</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            
+            <section id="sec-addRoom" class="content-section">
+                <div class="card form-card">
+                    <div class="card-header">
+                        <h3>Add a New Room</h3>
+                    </div>
+                    <div class="form-body">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="roomNumber">Room Number</label>
+                                <input type="text" id="roomNumber" placeholder="e.g. 101" />
+                            </div>
+                            <div class="form-group">
+                                <label for="roomType">Room Type</label>
+                                <select id="roomType">
+                                    <option value="Single">Single</option>
+                                    <option value="Double">Double</option>
+                                    <option value="Suite">Suite</option>
+                                </select>
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="roomPrice">Price Per Night (₹)</label>
+                                <input type="number" id="roomPrice" placeholder="e.g. 1500" min="1" />
+                            </div>
+                        </div>
+                        <button class="btn-primary" onclick="addRoom()">➕ Add Room</button>
+                        <div id="addMsg" class="msg"></div>
+                    </div>
+                </div>
+            </section>
+
+            
+            <section id="sec-viewRooms" class="content-section">
+                <div class="card">
+                    <div class="card-header">
+                        <h3>All Rooms</h3>
+                        <button class="btn-sm" onclick="loadRoomsTable()">🔄 Refresh</button>
+                    </div>
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Room No</th>
+                                    <th>Type</th>
+                                    <th>Price / Night</th>
+                                    <th>Status</th>
+                                    <th>Current Guest</th>
+                                </tr>
+                            </thead>
+                            <tbody id="roomsBody">
+                                <tr>
+                                    <td colspan="5" class="empty">Click Refresh to load rooms.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+            
+            <section id="sec-bookRoom" class="content-section">
+                <div class="card form-card">
+                    <div class="card-header">
+                        <h3>Book a Room</h3>
+                    </div>
+                    <div class="form-body">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="bookSelect">Select Available Room</label>
+                                <select id="bookSelect">
+                                    <option value="">-- Select a Room --</option>
+                                </select>
+                            </div>
+                            <div class="form-group">
+                                <label for="nights">Number of Nights</label>
+                                <input type="number" id="nights" value="1" min="1" />
+                            </div>
+                        </div>
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="custName">Customer Name</label>
+                                <input type="text" id="custName" placeholder="Enter full name" />
+                            </div>
+                            <div class="form-group">
+                                <label for="custPhone">Phone Number</label>
+                                <input type="text" id="custPhone" placeholder="e.g. 9876543210" />
+                            </div>
+                        </div>
+                        <button class="btn-primary" onclick="bookRoom()">📋 Confirm Booking</button>
+                        <div id="bookMsg" class="msg"></div>
+                    </div>
+                </div>
+            </section>
+
+            
+            <section id="sec-checkout" class="content-section">
+                <div class="card form-card">
+                    <div class="card-header">
+                        <h3>Checkout Guest</h3>
+                    </div>
+                    <div class="form-body">
+                        <div class="form-row">
+                            <div class="form-group">
+                                <label for="checkoutSelect">Select Booked Room</label>
+                                <select id="checkoutSelect">
+                                    <option value="">-- Select a Room --</option>
+                                </select>
+                            </div>
+                        </div>
+                        <button class="btn-danger" onclick="checkoutRoom()">🧾 Checkout &amp; Generate Bill</button>
+                        <div id="checkoutMsg" class="msg"></div>
+
+                        
+                        <div id="billBox" class="bill-box hidden">
+                            <h3>🧾 Bill Receipt</h3>
+                            <table class="bill-table">
+                                <tr>
+                                    <td class="bill-lbl">Customer Name</td>
+                                    <td id="bCust"></td>
+                                </tr>
+                                <tr>
+                                    <td class="bill-lbl">Room Number</td>
+                                    <td id="bRoom"></td>
+                                </tr>
+                                <tr>
+                                    <td class="bill-lbl">Number of Nights</td>
+                                    <td id="bNights"></td>
+                                </tr>
+                                <tr>
+                                    <td class="bill-lbl">Price Per Night</td>
+                                    <td id="bPrice"></td>
+                                </tr>
+                                <tr class="bill-total">
+                                    <td>Total Bill</td>
+                                    <td id="bTotal"></td>
+                                </tr>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </section>
+
+            
+            <section id="sec-bookings" class="content-section">
+                <div class="card">
+                    <div class="card-header">
+                        <h3>All Current Bookings</h3>
+                        <button class="btn-sm" onclick="loadBookings()">🔄 Refresh</button>
+                    </div>
+                    <div class="table-wrap">
+                        <table>
+                            <thead>
+                                <tr>
+                                    <th>Room No</th>
+                                    <th>Type</th>
+                                    <th>Customer</th>
+                                    <th>Phone</th>
+                                    <th>Nights</th>
+                                    <th>Price/Night</th>
+                                    <th>Total</th>
+                                </tr>
+                            </thead>
+                            <tbody id="bookingsBody">
+                                <tr>
+                                    <td colspan="7" class="empty">Click Refresh to load bookings.</td>
+                                </tr>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </section>
+
+        </main>
+    </div>
+
+    
+    <script>
+
+        
+        (function updateDate() {
+            var el = document.getElementById('topbarDate');
+            if (el) {
+                el.textContent = new Date().toLocaleDateString('en-IN', {
+                    weekday: 'long', year: 'numeric', month: 'long', day: 'numeric'
+                });
+            }
+        })();
+
+        
+        var VALID_USER = 'admin';
+        var VALID_PASS = 'admin123';
+        var LOGIN = document.getElementById('loginPage');
+        var DASH = document.getElementById('dashboardPage');
+        var SIDEBAR_EL = document.getElementById('sidebar');
+        var MAIN_EL = document.getElementById('mainContent');
+        var TOGGLE_EL = document.getElementById('sidebarToggle');
+
+        
+        function doLogin() {
+            var u = document.getElementById('loginUser').value.trim();
+            var p = document.getElementById('loginPass').value;
+            var errBox = document.getElementById('loginError');
+
+            if (u === VALID_USER && p === VALID_PASS) {
+                errBox.classList.add('hidden');
+                LOGIN.classList.add('hidden');
+                DASH.classList.remove('hidden');
+                loadDashboard();
+            } else {
+                errBox.classList.remove('hidden');
+                document.getElementById('loginPass').value = '';
+            }
+        }
+
+        
+        document.getElementById('loginPass').addEventListener('keydown', function (e) {
+            if (e.key === 'Enter') doLogin();
+        });
+        document.getElementById('loginUser').addEventListener('keydown', function (e) {
+            if (e.key === 'Enter') document.getElementById('loginPass').focus();
+        });
+
+        
+        function doLogout() {
+            DASH.classList.add('hidden');
+            LOGIN.classList.remove('hidden');
+            document.getElementById('loginUser').value = '';
+            document.getElementById('loginPass').value = '';
+        }
+
+        
+        var sidebarCollapsed = false;
+        function toggleSidebar() {
+            sidebarCollapsed = !sidebarCollapsed;
+            if (sidebarCollapsed) {
+                SIDEBAR_EL.classList.add('collapsed');
+                MAIN_EL.classList.add('expanded');
+                TOGGLE_EL.textContent = '\u203a';
+            } else {
+                SIDEBAR_EL.classList.remove('collapsed');
+                MAIN_EL.classList.remove('expanded');
+                TOGGLE_EL.textContent = '\u2039';
+            }
+        }
+
+        
+        function showSection(name, btn) {
+            document.querySelectorAll('.content-section').forEach(function (s) {
+                s.classList.remove('active');
+            });
+            document.querySelectorAll('.nav-item').forEach(function (n) {
+                n.classList.remove('active');
+            });
+
+            document.getElementById('sec-' + name).classList.add('active');
+            if (btn) btn.classList.add('active');
+
+            document.getElementById('pageTitle').textContent = btn ? btn.dataset.title : name;
+            document.getElementById('pageBreadcrumb').textContent = btn ? (btn.dataset.crumb || '') : '';
+
+            if (name === 'dashboard') loadDashboard();
+            if (name === 'viewRooms') loadRoomsTable();
+            if (name === 'bookRoom') loadAvailableRooms();
+            if (name === 'checkout') loadBookedRooms();
+            if (name === 'bookings') loadBookings();
+
+            if (window.innerWidth <= 768 && !sidebarCollapsed) toggleSidebar();
+        }
+
+        
+        function loadDashboard() {
+            fetchAllRooms().then(function (rooms) {
+                var total = rooms.length;
+                var available = rooms.filter(function (r) { return r.status === 'Available'; }).length;
+                var booked = total - available;
+                var revenue = rooms.reduce(function (sum, r) { return sum + (r.pricePerNight || 0); }, 0);
+
+                document.getElementById('statTotal').textContent = total;
+                document.getElementById('statAvailable').textContent = available;
+                document.getElementById('statBooked').textContent = booked;
+                document.getElementById('statRevenue').textContent = '\u20b9' + revenue.toLocaleString('en-IN');
+
+                
+                var circumference = 2 * Math.PI * 45;
+                var bookedPct = total > 0 ? booked / total : 0;
+                var bookedDash = bookedPct * circumference;
+                var availDash = (1 - bookedPct) * circumference;
+
+                var dA = document.getElementById('donutAvailable');
+                var dB = document.getElementById('donutBooked');
+                dA.setAttribute('stroke-dasharray', availDash + ' ' + circumference);
+                dA.setAttribute('stroke-dashoffset', 0);
+                dB.setAttribute('stroke-dasharray', bookedDash + ' ' + circumference);
+                dB.setAttribute('stroke-dashoffset', -availDash);
+
+                document.getElementById('donutLabel').textContent =
+                    total > 0 ? Math.round(bookedPct * 100) + '%' : '—';
+
+                
+                var tbody = document.getElementById('dashBookingsBody');
+                var bookedRooms = rooms.filter(function (r) { return r.status === 'Booked'; }).slice(0, 5);
+                if (bookedRooms.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="4" class="empty">No active bookings.</td></tr>';
+                } else {
+                    tbody.innerHTML = bookedRooms.map(function (b) {
+                        return '<tr>'
+                            + '<td><strong>' + b.roomNumber + '</strong></td>'
+                            + '<td>' + (b.customerName || '\u2014') + '</td>'
+                            + '<td>' + (b.numberOfNights || '\u2014') + '</td>'
+                            + '<td><strong>\u20b9' + ((b.pricePerNight || 0) * (b.numberOfNights || 0)) + '</strong></td>'
+                            + '</tr>';
+                    }).join('');
+                }
+            }).catch(function () {
+                ['statTotal', 'statAvailable', 'statBooked', 'statRevenue'].forEach(function (id) {
+                    document.getElementById(id).textContent = '\u2014';
+                });
+            });
+        }
+
+        
+        function fetchAllRooms() {
+            return fetch('/api/rooms').then(function (res) { return res.json(); });
+        }
+
+        
+        function addRoom() {
+            var roomNumber = document.getElementById('roomNumber').value.trim();
+            var roomType = document.getElementById('roomType').value;
+            var price = document.getElementById('roomPrice').value.trim();
+            var msgDiv = document.getElementById('addMsg');
+
+            if (!roomNumber || !price) {
+                showMsg(msgDiv, 'Please fill in Room Number and Price.', 'error');
+                return;
+            }
+
+            var body = 'roomNumber=' + encodeURIComponent(roomNumber)
+                + '&type=' + encodeURIComponent(roomType)
+                + '&price=' + encodeURIComponent(price);
+
+            fetch('/api/add', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: body
+            })
+                .then(function (res) { return res.json(); })
+                .then(function (data) {
+                    if (data.success) {
+                        showMsg(msgDiv, '\u2705 ' + data.success, 'success');
+                        document.getElementById('roomNumber').value = '';
+                        document.getElementById('roomPrice').value = '';
+                    } else {
+                        showMsg(msgDiv, '\u274c ' + data.error, 'error');
+                    }
+                })
+                .catch(function () {
+                    showMsg(msgDiv, '\u274c Cannot connect to server. Is Java running?', 'error');
+                });
+        }
+
+        
+        function loadRoomsTable() {
+            var tbody = document.getElementById('roomsBody');
+            tbody.innerHTML = '<tr><td colspan="5" class="empty">Loading...</td></tr>';
+
+            fetchAllRooms().then(function (rooms) {
+                if (rooms.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="5" class="empty">No rooms added yet.</td></tr>';
+                    return;
+                }
+                tbody.innerHTML = rooms.map(function (r) {
+                    var badge = r.status === 'Available'
+                        ? '<span class="badge-available">Available</span>'
+                        : '<span class="badge-booked">Booked</span>';
+                    return '<tr>'
+                        + '<td><strong>' + r.roomNumber + '</strong></td>'
+                        + '<td>' + r.type + '</td>'
+                        + '<td>\u20b9' + r.pricePerNight + '</td>'
+                        + '<td>' + badge + '</td>'
+                        + '<td>' + (r.customerName || '\u2014') + '</td>'
+                        + '</tr>';
+                }).join('');
+            }).catch(function () {
+                tbody.innerHTML = '<tr><td colspan="5" class="empty">Error loading rooms.</td></tr>';
+            });
+        }
+
+        
+        function populateSelect(selectId, filter, labelFn, emptyMsg) {
+            var select = document.getElementById(selectId);
+            select.innerHTML = '<option value="">-- Select a Room --</option>';
+            fetchAllRooms().then(function (rooms) {
+                var filtered = rooms.filter(filter);
+                filtered.forEach(function (r) {
+                    var opt = document.createElement('option');
+                    opt.value = r.roomNumber;
+                    opt.textContent = labelFn(r);
+                    select.appendChild(opt);
+                });
+                if (filtered.length === 0) {
+                    var opt = document.createElement('option');
+                    opt.textContent = emptyMsg;
+                    opt.disabled = true;
+                    select.appendChild(opt);
+                }
+            });
+        }
+
+        function loadAvailableRooms() {
+            populateSelect('bookSelect',
+                function (r) { return r.status === 'Available'; },
+                function (r) { return 'Room ' + r.roomNumber + ' (' + r.type + ') \u2014 \u20b9' + r.pricePerNight + '/night'; },
+                'No rooms available'
+            );
+        }
+
+        
+        function bookRoom() {
+            var roomNumber = document.getElementById('bookSelect').value;
+            var custName = document.getElementById('custName').value.trim();
+            var custPhone = document.getElementById('custPhone').value.trim();
+            var nights = document.getElementById('nights').value.trim();
+            var msgDiv = document.getElementById('bookMsg');
+
+            if (!roomNumber || !custName || !nights) {
+                showMsg(msgDiv, 'Please fill in all fields and select a room.', 'error');
+                return;
+            }
+
+            var body = 'roomNumber=' + encodeURIComponent(roomNumber)
+                + '&customerName=' + encodeURIComponent(custName)
+                + '&customerPhone=' + encodeURIComponent(custPhone)
+                + '&nights=' + encodeURIComponent(nights);
+
+            fetch('/api/book', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: body
+            })
+                .then(function (res) { return res.json(); })
+                .then(function (data) {
+                    if (data.success) {
+                        showMsg(msgDiv, '\u2705 ' + data.success, 'success');
+                        document.getElementById('custName').value = '';
+                        document.getElementById('custPhone').value = '';
+                        document.getElementById('nights').value = '1';
+                        loadAvailableRooms();
+                    } else {
+                        showMsg(msgDiv, '\u274c ' + data.error, 'error');
+                    }
+                })
+                .catch(function () {
+                    showMsg(msgDiv, '\u274c Cannot connect to server. Is Java running?', 'error');
+                });
+        }
+
+        
+        function loadBookedRooms() {
+            populateSelect('checkoutSelect',
+                function (r) { return r.status === 'Booked'; },
+                function (r) { return 'Room ' + r.roomNumber + ' \u2014 ' + r.customerName; },
+                'No rooms currently booked'
+            );
+        }
+
+        
+        function checkoutRoom() {
+            var roomNumber = document.getElementById('checkoutSelect').value;
+            var msgDiv = document.getElementById('checkoutMsg');
+            var billBox = document.getElementById('billBox');
+
+            if (!roomNumber) {
+                showMsg(msgDiv, 'Please select a room to checkout.', 'error');
+                return;
+            }
+
+            var body = 'roomNumber=' + encodeURIComponent(roomNumber);
+
+            fetch('/api/checkout', {
+                method: 'POST',
+                headers: { 'Content-Type': 'application/x-www-form-urlencoded' },
+                body: body
+            })
+                .then(function (res) { return res.json(); })
+                .then(function (data) {
+                    if (data.success) {
+                        showMsg(msgDiv, '\u2705 ' + data.success, 'success');
+                        document.getElementById('bCust').textContent = data.customerName;
+                        document.getElementById('bRoom').textContent = data.roomNumber;
+                        document.getElementById('bNights').textContent = data.nights + ' night(s)';
+                        document.getElementById('bPrice').textContent = '\u20b9' + data.pricePerNight;
+                        document.getElementById('bTotal').textContent = '\u20b9' + data.totalBill;
+                        billBox.classList.remove('hidden');
+                        loadBookedRooms();
+                    } else {
+                        showMsg(msgDiv, '\u274c ' + data.error, 'error');
+                        billBox.classList.add('hidden');
+                    }
+                })
+                .catch(function () {
+                    showMsg(msgDiv, '\u274c Cannot connect to server. Is Java running?', 'error');
+                });
+        }
+
+        
+        function loadBookings() {
+            var tbody = document.getElementById('bookingsBody');
+            tbody.innerHTML = '<tr><td colspan="7" class="empty">Loading...</td></tr>';
+
+            fetchAllRooms().then(function (rooms) {
+                var booked = rooms.filter(function (r) { return r.status === 'Booked'; });
+                if (booked.length === 0) {
+                    tbody.innerHTML = '<tr><td colspan="7" class="empty">No active bookings.</td></tr>';
+                    return;
+                }
+                tbody.innerHTML = booked.map(function (b) {
+                    var total = b.pricePerNight * b.numberOfNights;
+                    return '<tr>'
+                        + '<td><strong>' + b.roomNumber + '</strong></td>'
+                        + '<td>' + b.type + '</td>'
+                        + '<td>' + b.customerName + '</td>'
+                        + '<td>' + (b.customerPhone || '\u2014') + '</td>'
+                        + '<td>' + b.numberOfNights + '</td>'
+                        + '<td>\u20b9' + b.pricePerNight + '</td>'
+                        + '<td><strong>\u20b9' + total + '</strong></td>'
+                        + '</tr>';
+                }).join('');
+            }).catch(function () {
+                tbody.innerHTML = '<tr><td colspan="7" class="empty">Error loading bookings.</td></tr>';
+            });
+        }
+
+        
+        function showMsg(div, text, type) {
+            div.textContent = text;
+            div.className = 'msg ' + type;
+        }
+
+    </script>
+</body>
+
+</html>

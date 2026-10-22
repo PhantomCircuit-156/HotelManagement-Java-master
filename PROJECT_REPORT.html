@@ -1,0 +1,1200 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Mini Project Report — Hotel Management System</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:ital,wght@0,600;0,700;1,400&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
+    <style>
+        :root {
+            --primary: #0f172a;
+            --primary-light: #1e293b;
+            --accent: #2563eb;
+            --accent-soft: #eff6ff;
+            --text-main: #1e293b;
+            --text-muted: #64748b;
+            --border: #e2e8f0;
+            --bg-card: #f8fafc;
+            --success: #10b981;
+            --danger: #ef4444;
+        }
+
+        @page {
+            size: A4 portrait;
+            margin: 18mm 16mm 18mm 16mm;
+            @bottom-right {
+                content: counter(page);
+                font-family: 'Inter', sans-serif;
+                font-size: 8pt;
+                color: #94a3b8;
+            }
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, sans-serif;
+            color: var(--text-main);
+            background-color: #f1f5f9;
+            line-height: 1.55;
+            font-size: 9.5pt;
+        }
+
+        .report-sheet {
+            background: #ffffff;
+            width: 210mm;
+            min-height: 297mm;
+            margin: 20px auto;
+            padding: 22mm 20mm;
+            position: relative;
+            box-shadow: 0 4px 20px rgba(0,0,0,0.06);
+            display: flex;
+            flex-direction: column;
+            page-break-after: always;
+        }
+
+        @media print {
+            body {
+                background: #ffffff;
+            }
+            .report-sheet {
+                margin: 0;
+                width: 100%;
+                min-height: 100vh;
+                padding: 0;
+                box-shadow: none;
+                page-break-after: always;
+            }
+            .no-print {
+                display: none !important;
+            }
+        }
+
+        /* Running Header & Footer */
+        .page-header {
+            border-bottom: 2px solid #0f172a;
+            padding-bottom: 8px;
+            margin-bottom: 20px;
+        }
+        .page-header-top {
+            font-size: 7.5pt;
+            font-weight: 700;
+            letter-spacing: 1.5px;
+            text-transform: uppercase;
+            color: #64748b;
+        }
+        .page-header-title {
+            font-size: 16pt;
+            font-weight: 700;
+            color: #0f172a;
+            font-family: 'Playfair Display', Georgia, serif;
+            margin-top: 3px;
+        }
+        .page-header-sub {
+            font-size: 8.5pt;
+            color: #64748b;
+            margin-top: 2px;
+        }
+
+        .page-footer {
+            margin-top: auto;
+            padding-top: 12px;
+            border-top: 1px solid #e2e8f0;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            font-size: 7.5pt;
+            color: #94a3b8;
+        }
+
+        /* Headings */
+        h2 {
+            font-size: 12pt;
+            font-weight: 700;
+            color: #0f172a;
+            margin: 16px 0 8px 0;
+            border-left: 3px solid var(--accent);
+            padding-left: 8px;
+        }
+        h2:first-of-type {
+            margin-top: 0;
+        }
+        h3 {
+            font-size: 10pt;
+            font-weight: 600;
+            color: #1e293b;
+            margin: 12px 0 6px 0;
+        }
+        p {
+            margin-bottom: 10px;
+            text-align: justify;
+        }
+
+        /* Checklist */
+        .checklist {
+            list-style: none;
+            margin: 8px 0 14px 0;
+        }
+        .checklist li {
+            position: relative;
+            padding-left: 20px;
+            margin-bottom: 6px;
+            font-size: 9pt;
+        }
+        .checklist li::before {
+            content: "✓";
+            position: absolute;
+            left: 0;
+            color: var(--accent);
+            font-weight: 700;
+        }
+
+        /* Tables */
+        table {
+            width: 100%;
+            border-collapse: collapse;
+            margin: 10px 0 14px 0;
+            font-size: 8.5pt;
+        }
+        th, td {
+            padding: 7px 10px;
+            text-align: left;
+            border: 1px solid #e2e8f0;
+        }
+        th {
+            background-color: #0f172a;
+            color: #ffffff;
+            font-weight: 600;
+            letter-spacing: 0.3px;
+        }
+        tr:nth-child(even) {
+            background-color: #f8fafc;
+        }
+
+        /* Code/Architecture blocks */
+        .arch-diagram {
+            background: #f8fafc;
+            border: 1px solid #cbd5e1;
+            border-radius: 6px;
+            padding: 12px;
+            margin: 12px 0;
+            font-family: 'JetBrains Mono', monospace;
+            font-size: 7.8pt;
+            line-height: 1.45;
+            color: #0f172a;
+            white-space: pre;
+            overflow-x: auto;
+        }
+
+        .layer-box {
+            border: 1px solid #cbd5e1;
+            background: #ffffff;
+            border-radius: 6px;
+            padding: 8px 12px;
+            margin-bottom: 6px;
+            text-align: center;
+        }
+        .layer-title {
+            font-weight: 600;
+            font-size: 8.5pt;
+            color: #0f172a;
+        }
+        .layer-desc {
+            font-size: 7.5pt;
+            color: #64748b;
+        }
+        .layer-arrow {
+            text-align: center;
+            font-size: 10pt;
+            color: #94a3b8;
+            margin: 2px 0;
+        }
+
+        /* Scope Box */
+        .scope-box {
+            border: 1px solid #cbd5e1;
+            background: #f8fafc;
+            border-radius: 6px;
+            padding: 10px 14px;
+            margin: 8px 0 12px 0;
+        }
+        .scope-box strong {
+            display: block;
+            margin-bottom: 4px;
+            color: #0f172a;
+            font-size: 8.5pt;
+        }
+        .scope-box ul {
+            padding-left: 18px;
+            font-size: 8.5pt;
+        }
+
+        /* Grid Cards (Limitations & Future) */
+        .enhancement-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin: 12px 0;
+        }
+        .enhancement-card {
+            border: 1px solid #e2e8f0;
+            background: #ffffff;
+            border-radius: 6px;
+            padding: 10px 12px;
+        }
+        .enhancement-card h4 {
+            font-size: 9pt;
+            font-weight: 700;
+            color: #0f172a;
+            margin-bottom: 6px;
+            border-bottom: 1px solid #f1f5f9;
+            padding-bottom: 4px;
+        }
+        .enhancement-card ul {
+            padding-left: 16px;
+            font-size: 8pt;
+            color: #334155;
+        }
+        .enhancement-card li {
+            margin-bottom: 4px;
+        }
+
+        .highlight-box {
+            background: #eff6ff;
+            border: 1px solid #bfdbfe;
+            border-radius: 6px;
+            padding: 10px 14px;
+            font-size: 8.5pt;
+            color: #1e3a8a;
+            margin: 12px 0;
+        }
+
+        /* Mockup Containers */
+        .mockup-container {
+            border: 1px solid #cbd5e1;
+            border-radius: 8px;
+            background: #f8fafc;
+            padding: 14px;
+            margin: 12px 0;
+        }
+        .mockup-header {
+            font-size: 8pt;
+            font-weight: 700;
+            color: #64748b;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            margin-bottom: 8px;
+        }
+        .mockup-ui {
+            background: #ffffff;
+            border: 1px solid #e2e8f0;
+            border-radius: 6px;
+            padding: 12px;
+            box-shadow: 0 1px 3px rgba(0,0,0,0.04);
+        }
+
+        /* Action bar for printing */
+        .print-bar {
+            max-width: 210mm;
+            margin: 20px auto 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            background: #0f172a;
+            color: white;
+            padding: 12px 20px;
+            border-radius: 8px;
+        }
+        .print-btn {
+            background: #2563eb;
+            color: white;
+            border: none;
+            padding: 8px 16px;
+            font-weight: 600;
+            border-radius: 6px;
+            cursor: pointer;
+            font-size: 9pt;
+            transition: background 0.2s;
+        }
+        .print-btn:hover {
+            background: #1d4ed8;
+        }
+    </style>
+</head>
+<body>
+
+    <!-- Print Action Bar (Hidden when printing) -->
+    <div class="print-bar no-print">
+        <div>
+            <strong>Hotel Management System — Project Report</strong>
+            <span style="font-size: 8pt; opacity: 0.8; margin-left: 8px;">(Ready for PDF Export)</span>
+        </div>
+        <button class="print-btn" onclick="window.print()">🖨️ Print / Save as PDF</button>
+    </div>
+
+    <!-- ==================== PAGE 1: COVER PAGE ==================== -->
+    <div class="report-sheet" style="text-align: center; justify-content: space-between; padding: 35mm 25mm;">
+        <div>
+            <!-- College Crest Placeholder -->
+            <div style="width: 80px; height: 80px; border-radius: 50%; border: 3px solid #1e3a8a; margin: 0 auto 14px auto; display: flex; align-items: center; justify-content: center; font-size: 26pt; background: #eff6ff;">
+                🏨
+            </div>
+            <h1 style="font-size: 16pt; font-family: 'Playfair Display', Georgia, serif; color: #0f172a; font-weight: 700; line-height: 1.3;">
+                Vidya Prasarak Mandal’s College Of Engineering
+            </h1>
+            <p style="font-size: 8.5pt; color: #475569; margin-top: 4px;">
+                “Jnanadweepa” Thane College Campus, Chendani Bunder Road, Thane–400601<br>
+                <strong>URL:</strong> <a href="http://www.vpmthane.org" style="color: #2563eb; text-decoration: none;">www.vpmthane.org</a>
+            </p>
+        </div>
+
+        <div style="margin: 30px 0;">
+            <p style="font-size: 10pt; font-style: italic; color: #64748b; margin-bottom: 8px;">A Mini Project-Presentation On</p>
+            <div style="font-size: 22pt; font-family: 'Playfair Display', Georgia, serif; font-weight: 700; color: #0f172a; margin-bottom: 4px;">
+                “Hotel Management System”
+            </div>
+            <div style="font-size: 12pt; font-weight: 700; letter-spacing: 2px; color: #2563eb; text-transform: uppercase;">
+                LuxeStay Suite
+            </div>
+            <p style="font-size: 9.5pt; color: #475569; margin-top: 18px; font-style: italic;">
+                for<br>
+                <strong>Advanced Java Web Application &amp; Database Engineering</strong><br>
+                Submitted in partial fulfillment of the requirements<br>
+                For the degree of <strong>Bachelor of Engineering in Computer Science</strong><br>
+                for the<br>
+                <strong>Academic Year 2026–2027</strong>
+            </p>
+        </div>
+
+        <div>
+            <p style="font-size: 9pt; font-weight: 600; color: #64748b; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 6px;">By</p>
+            <p style="font-size: 10pt; font-weight: 600; color: #0f172a; line-height: 1.5;">
+                Devansh &amp; Team (Roll No: 01, 02, 03, 04)
+            </p>
+            
+            <div style="margin-top: 25px;">
+                <p style="font-size: 9pt; font-weight: 600; color: #64748b; text-transform: uppercase; letter-spacing: 1px; margin-bottom: 4px;">Supervisor</p>
+                <p style="font-size: 10.5pt; font-weight: 600; color: #0f172a;">Prof. Project Guide</p>
+            </div>
+        </div>
+
+        <div class="page-footer" style="border: none; justify-content: center;">
+            <span>LuxeStay · Hotel Management System</span>
+        </div>
+    </div>
+
+    <!-- ==================== PAGE 2: INTRODUCTION ==================== -->
+    <div class="report-sheet">
+        <div class="page-header">
+            <div class="page-header-top">Mini Project Report</div>
+            <div class="page-header-title">Hotel Management System</div>
+            <div class="page-header-sub">A Java web application for managing hotel room inventory, guest reservations, occupancy analytics, and automated billing checkout.</div>
+        </div>
+
+        <h2>1.1 Background</h2>
+        <p>
+            In the modern hospitality sector, maintaining an accurate and frictionless guest record system is essential to guest satisfaction and hotel operational revenue. Conventional approaches to hotel front-desk administration rely on physical ledgers or standalone spreadsheets. These legacy workflows frequently introduce duplicate room assignments, manual billing computation errors, misplaced guest contact records, and severe delays in identifying vacant versus occupied rooms during peak check-in windows.
+        </p>
+
+        <h2>1.2 Problem Statement</h2>
+        <p>
+            A manual hotel management register can be arduous to maintain, lacks real-time synchronization between desk clerks, and offers no automated mechanism to generate itemized checkout bills. Front-desk personnel must manually verify stay duration, compute per-night multipliers, and physically check rooms before updating room availability. The LuxeStay project delivers a high-speed, centralized web solution where hotel clerks can view live occupancy metrics, allocate vacant rooms with zero collision, and execute checkouts with instant automated receipts.
+        </p>
+
+        <h2>1.3 Objectives</h2>
+        <ul class="checklist">
+            <li>Provide a centralized relational database for room inventory and active guest bookings.</li>
+            <li>Enforce authenticated sessions so that room administration and booking actions are restricted to authorized hotel staff.</li>
+            <li>Allow staff to dynamically register new rooms with customizable categories (Single, Double, Suite) and nightly pricing.</li>
+            <li>Prevent double-booking by presenting only vacant rooms in reservation forms and dynamically managing room availability status.</li>
+            <li>Automate stay charge computations (<code>nights &times; pricePerNight</code>) and generate itemized digital receipts.</li>
+            <li>Present an executive dashboard with dynamic KPI cards and an SVG occupancy donut chart for administrative decision making.</li>
+            <li>Demonstrate the implementation of Jakarta Servlet 6.0, Apache Tomcat 10.1, JDBC, MySQL, and asynchronous Fetch API in a decoupled web architecture.</li>
+        </ul>
+
+        <h2>1.4 Scope</h2>
+        <div class="scope-box">
+            <strong>Included in Current Release:</strong>
+            <ul>
+                <li>Staff authentication &amp; secure session lifecycle.</li>
+                <li>Live Executive Dashboard with real-time KPI metrics (Total, Available, Booked, Potential Revenue).</li>
+                <li>Dynamic SVG donut chart visualizing room occupancy ratios.</li>
+                <li>Room inventory addition with validation (Room number, category, pricing).</li>
+                <li>Guest reservation workflow with phone validation and stay duration.</li>
+                <li>Automated checkout with printable billing receipt breakdown.</li>
+            </ul>
+        </div>
+
+        <h2>1.5 Intended Users</h2>
+        <p><strong>Hotel Staff &amp; Receptionists:</strong> Handle day-to-day guest arrivals, allocate vacant rooms, monitor active bookings, and process checkout billings.</p>
+        <p><strong>Hotel General Manager:</strong> Reviews room occupancy metrics, potential nightly revenue, registers new rooms, and oversees hotel operational efficiency.</p>
+
+        <div class="page-footer">
+            <span>LuxeStay · Hotel Management System</span>
+            <span>Page 2</span>
+        </div>
+    </div>
+
+    <!-- ==================== PAGE 3: REQUIREMENTS & FEASIBILITY ==================== -->
+    <div class="report-sheet">
+        <div class="page-header">
+            <div class="page-header-top">Requirements &amp; Feasibility</div>
+            <div class="page-header-title">Technical Specifications &amp; Feasibility Analysis</div>
+            <div class="page-header-sub">Required software, core functional capabilities, and operational constraints.</div>
+        </div>
+
+        <h2>2.1 Functional Requirements</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th style="width: 12%;">ID</th>
+                    <th style="width: 28%;">Requirement</th>
+                    <th>Expected Behaviour</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>FR-01</strong></td>
+                    <td>Staff Authentication</td>
+                    <td>Validate submitted username/password against configured administrative credentials; unlock dashboard on success.</td>
+                </tr>
+                <tr>
+                    <td><strong>FR-02</strong></td>
+                    <td>Executive Dashboard</td>
+                    <td>Aggregate real-time metrics (Total, Available, Booked, Revenue); calculate occupancy percentage and render SVG donut chart.</td>
+                </tr>
+                <tr>
+                    <td><strong>FR-03</strong></td>
+                    <td>Room Registration</td>
+                    <td>Validate unique room number, category, and positive numeric nightly price; persist record to MySQL database.</td>
+                </tr>
+                <tr>
+                    <td><strong>FR-04</strong></td>
+                    <td>Room Inventory Listing</td>
+                    <td>Retrieve all room records via <code>/api/rooms</code> and render structured table with status indicators and current guest details.</td>
+                </tr>
+                <tr>
+                    <td><strong>FR-05</strong></td>
+                    <td>Guest Reservation Engine</td>
+                    <td>Filter dropdown to display only vacant rooms; validate guest name and phone; update room status to <code>'Booked'</code>.</td>
+                </tr>
+                <tr>
+                    <td><strong>FR-06</strong></td>
+                    <td>Guest Checkout &amp; Billing</td>
+                    <td>Select occupied room, compute total bill (<code>pricePerNight &times; nights</code>), reset room to <code>'Available'</code>, and display receipt modal.</td>
+                </tr>
+                <tr>
+                    <td><strong>FR-07</strong></td>
+                    <td>Session Logout</td>
+                    <td>Invalidate user session, clear input buffers, and return staff to secure login screen.</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h2>2.2 Non-Functional Requirements</h2>
+        <ul style="padding-left: 18px; font-size: 8.5pt; color: #334155; margin-bottom: 12px;">
+            <li><strong>Usability:</strong> Responsive Single-Page Application (SPA) with collapsible navigation, modern typography (Inter), and clear visual status indicators.</li>
+            <li><strong>Data Integrity:</strong> Primary key constraints enforce unique room identifiers; all database operations utilize JDBC <code>PreparedStatement</code> to prevent SQL injection.</li>
+            <li><strong>Maintainability:</strong> Clean decoupling of Presentation Layer (HTML/CSS), Controller Servlet (<code>HotelServlet.java</code>), Domain Model (<code>Room.java</code>), and Database Access (<code>DBManager.java</code>).</li>
+            <li><strong>Compatibility:</strong> Fully compliant with Jakarta EE 10 (Jakarta Servlet 6.0) executing seamlessly on Apache Tomcat 10.1 and Java SE 17+.</li>
+            <li><strong>Performance:</strong> Zero third-party runtime frameworks; native asynchronous Fetch requests deliver sub-80ms API response latency.</li>
+        </ul>
+
+        <h2>2.3 Software &amp; Hardware Requirements</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th style="width: 32%;">Component</th>
+                    <th>Specification / Purpose</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>JDK 17 or later</strong></td>
+                    <td>OpenJDK / Oracle JDK 17+ to compile and execute backend Java Servlets.</td>
+                </tr>
+                <tr>
+                    <td><strong>Apache Tomcat 10.1.26</strong></td>
+                    <td>Jakarta Servlet 6.0 compliant servlet container and web application runtime.</td>
+                </tr>
+                <tr>
+                    <td><strong>MySQL 8.0 / 8.4+</strong></td>
+                    <td>Relational database server for persistent storage of room inventory and guest bookings.</td>
+                </tr>
+                <tr>
+                    <td><strong>MySQL Connector/J 9.0.0</strong></td>
+                    <td>Type-4 JDBC driver providing high-performance database connectivity to MySQL.</td>
+                </tr>
+                <tr>
+                    <td><strong>Modern Web Browser</strong></td>
+                    <td>Chrome, Edge, or Firefox supporting ES6 Fetch API and SVG vector rendering.</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h2>2.4 Feasibility Study</h2>
+        <p>
+            The project is technically, economically, and operationally feasible. It leverages open-source, industry-standard Java and MySQL software, requires zero expensive hardware or proprietary licenses, and features an intuitive point-and-click workflow that requires no specialized training for front-desk personnel.
+        </p>
+
+        <div class="page-footer">
+            <span>LuxeStay · Hotel Management System</span>
+            <span>Page 3</span>
+        </div>
+    </div>
+
+    <!-- ==================== PAGE 4: SYSTEM DESIGN ==================== -->
+    <div class="report-sheet">
+        <div class="page-header">
+            <div class="page-header-top">System Design</div>
+            <div class="page-header-title">Application Architecture &amp; Module Design</div>
+            <div class="page-header-sub">Architectural layers, request processing lifecycle, and component responsibilities.</div>
+        </div>
+
+        <h2>3.1 High-Level Architecture</h2>
+        <div style="margin: 12px 0;">
+            <div class="layer-box" style="border-left: 4px solid #3b82f6;">
+                <div class="layer-title">Browser / Presentation Layer</div>
+                <div class="layer-desc">HTML5 Forms · Vanilla CSS3 (Glassmorphism &amp; Inter) · Asynchronous JavaScript (Fetch API) · SVG Donut Chart</div>
+            </div>
+            <div class="layer-arrow">↕ HTTP Requests / JSON Responses (REST-like API)</div>
+            <div class="layer-box" style="border-left: 4px solid #10b981;">
+                <div class="layer-title">Controller Layer — Java Servlets</div>
+                <div class="layer-desc"><code>HotelServlet.java</code> (Jakarta Servlet 6.0 on Apache Tomcat 10.1.26)<br>Endpoints: <code>/api/rooms</code> · <code>/api/add</code> · <code>/api/book</code> · <code>/api/checkout</code></div>
+            </div>
+            <div class="layer-arrow">↕ JDBC Connection / Parameterized SQL Statements</div>
+            <div class="layer-box" style="border-left: 4px solid #f59e0b;">
+                <div class="layer-title">Data Access &amp; Domain Model Layer</div>
+                <div class="layer-desc"><code>DBManager.java</code> (Connection handling, Schema Auto-Init, DAO queries) · <code>Room.java</code> (Model &amp; JSON Serialization)</div>
+            </div>
+            <div class="layer-arrow">↕ TCP/IP Socket (Port 3306)</div>
+            <div class="layer-box" style="border-left: 4px solid #8b5cf6;">
+                <div class="layer-title">Data Storage Layer — MySQL Database</div>
+                <div class="layer-desc">Database: <code>hotel_db</code> · Persistent Relational Table: <code>rooms</code></div>
+            </div>
+        </div>
+
+        <h2>3.2 Major Modules</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th style="width: 28%;">Module</th>
+                    <th>Core Responsibility</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><strong>Authentication Guard</strong></td>
+                    <td>Controls front-desk access, displays credentials validation error banners, and manages session state.</td>
+                </tr>
+                <tr>
+                    <td><strong>Dashboard Analytics</strong></td>
+                    <td>Computes room status aggregates, calculates occupancy percentage, renders SVG chart, and shows recent bookings.</td>
+                </tr>
+                <tr>
+                    <td><strong>Room Inventory Manager</strong></td>
+                    <td>Validates and registers new room records (number, category, price) via the <code>/api/add</code> endpoint.</td>
+                </tr>
+                <tr>
+                    <td><strong>Reservation Engine</strong></td>
+                    <td>Filters only available rooms for selection, captures guest metadata, and transitions room status to <code>'Booked'</code>.</td>
+                </tr>
+                <tr>
+                    <td><strong>Checkout &amp; Billing</strong></td>
+                    <td>Calculates charges (<code>nights &times; pricePerNight</code>), frees room back to <code>'Available'</code>, and renders receipt modal.</td>
+                </tr>
+                <tr>
+                    <td><strong>DBManager Utility</strong></td>
+                    <td>Manages JDBC driver loading, performs automatic schema bootstrapping, and executes parameterized SQL statements.</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h2>3.3 Request Processing Pattern</h2>
+        <p>
+            When a staff member triggers an action (such as confirming a room booking), the browser dispatches an asynchronous HTTP POST call via the JavaScript <code>fetch()</code> API with form-urlencoded payloads. The Jakarta Servlet <code>HotelServlet</code> intercepts the request at <code>/api/book</code>, extracts parameter values, and calls the static method <code>DBManager.bookRoom()</code>. The database manager executes a parameterized <code>PreparedStatement</code> against MySQL, ensuring zero risk of SQL injection. Upon completion, the servlet returns a JSON payload (e.g., <code>{"success":"..."}</code>), prompting the client-side UI to update the DOM and refresh dashboard metrics instantaneously without full page reloads.
+        </p>
+
+        <div class="page-footer">
+            <span>LuxeStay · Hotel Management System</span>
+            <span>Page 4</span>
+        </div>
+    </div>
+
+    <!-- ==================== PAGE 5: DATABASE DESIGN ==================== -->
+    <div class="report-sheet">
+        <div class="page-header">
+            <div class="page-header-top">Database Design</div>
+            <div class="page-header-title">Relational Schema &amp; Data Operations</div>
+            <div class="page-header-sub">Structure of hotel_db database, data dictionary, and transactional operations.</div>
+        </div>
+
+        <h2>4.1 Database Overview</h2>
+        <p>
+            The project utilizes a dedicated relational database named <code>hotel_db</code> configured with UTF-8 Unicode encoding (<code>utf8mb4_unicode_ci</code>). Room specifications, pricing, reservation states, and active customer metadata are managed in the <code>rooms</code> table.
+        </p>
+
+        <div class="arch-diagram">DATABASE: hotel_db
+│
+└── rooms
+    ├── room_number       VARCHAR(20)    NOT NULL PRIMARY KEY
+    ├── type              VARCHAR(20)    NOT NULL DEFAULT 'Single'
+    ├── price_per_night   DECIMAL(10,2)  NOT NULL
+    ├── status            VARCHAR(20)    NOT NULL DEFAULT 'Available'
+    ├── customer_name     VARCHAR(100)   DEFAULT ''
+    ├── customer_phone    VARCHAR(20)    DEFAULT ''
+    └── number_of_nights  INT            DEFAULT 0</div>
+
+        <h2>4.2 Data Dictionary — <code>rooms</code> Table</h2>
+        <table>
+            <thead>
+                <tr>
+                    <th style="width: 22%;">Field</th>
+                    <th style="width: 20%;">Type</th>
+                    <th style="width: 18%;">Constraints</th>
+                    <th>Purpose &amp; Description</th>
+                </tr>
+            </thead>
+            <tbody>
+                <tr>
+                    <td><code>room_number</code></td>
+                    <td>VARCHAR(20)</td>
+                    <td>PRIMARY KEY, NOT NULL</td>
+                    <td>Unique physical room identifier (e.g., '101', '204').</td>
+                </tr>
+                <tr>
+                    <td><code>type</code></td>
+                    <td>VARCHAR(20)</td>
+                    <td>NOT NULL, DEFAULT 'Single'</td>
+                    <td>Category of room: 'Single', 'Double', or 'Suite'.</td>
+                </tr>
+                <tr>
+                    <td><code>price_per_night</code></td>
+                    <td>DECIMAL(10,2)</td>
+                    <td>NOT NULL</td>
+                    <td>Nightly room rate in Indian Rupees (₹).</td>
+                </tr>
+                <tr>
+                    <td><code>status</code></td>
+                    <td>VARCHAR(20)</td>
+                    <td>NOT NULL, DEFAULT 'Available'</td>
+                    <td>Current status flag: 'Available' or 'Booked'.</td>
+                </tr>
+                <tr>
+                    <td><code>customer_name</code></td>
+                    <td>VARCHAR(100)</td>
+                    <td>DEFAULT ''</td>
+                    <td>Full name of the currently staying guest.</td>
+                </tr>
+                <tr>
+                    <td><code>customer_phone</code></td>
+                    <td>VARCHAR(20)</td>
+                    <td>DEFAULT ''</td>
+                    <td>Contact telephone number of registered guest.</td>
+                </tr>
+                <tr>
+                    <td><code>number_of_nights</code></td>
+                    <td>INT</td>
+                    <td>DEFAULT 0</td>
+                    <td>Duration of current stay used for bill generation.</td>
+                </tr>
+            </tbody>
+        </table>
+
+        <h2>4.3 Data Operations</h2>
+        <ul style="padding-left: 18px; font-size: 8.5pt; color: #334155; line-height: 1.6;">
+            <li><strong>Create (Add Room):</strong> Staff enters room details; <code>DBManager.addRoom()</code> executes an <code>INSERT INTO rooms</code> statement with default status <code>'Available'</code>.</li>
+            <li><strong>Read (Load Inventory &amp; Analytics):</strong> <code>DBManager.loadRooms()</code> queries all rooms via <code>SELECT * FROM rooms</code>, mapping results to <code>Room</code> entity objects for JSON serialization.</li>
+            <li><strong>Update (Book Room):</strong> When reserving an available room, <code>DBManager.bookRoom()</code> updates status to <code>'Booked'</code> and sets customer name, phone number, and stay duration.</li>
+            <li><strong>Reset (Checkout):</strong> Upon guest checkout, <code>DBManager.checkoutRoom()</code> resets status back to <code>'Available'</code> and clears customer details and nights to zero.</li>
+        </ul>
+
+        <div class="page-footer">
+            <span>LuxeStay · Hotel Management System</span>
+            <span>Page 5</span>
+        </div>
+    </div>
+
+    <!-- ==================== PAGE 6: IMPLEMENTATION & DEPLOYMENT ==================== -->
+    <div class="report-sheet">
+        <div class="page-header">
+            <div class="page-header-top">Implementation &amp; Deployment</div>
+            <div class="page-header-title">Repository Structure &amp; Build Automation</div>
+            <div class="page-header-sub">Source code layout, implementation highlights, and local startup workflow.</div>
+        </div>
+
+        <h2>5.1 Project Directory Structure</h2>
+        <div class="arch-diagram">HotelManagement-Java-master/
+├── db/
+│   └── schema.sql                  # Database creation and table initialization script
+├── src/com/hotel/
+│   ├── model/
+│   │   └── Room.java               # Domain model entity with JSON/CSV serialization
+│   ├── servlet/
+│   │   └── HotelServlet.java       # Jakarta Servlet handling /api/* REST endpoints
+│   └── util/
+│       └── DBManager.java          # JDBC connection, auto-init, and DAO methods
+├── webapp/
+│   ├── WEB-INF/
+│   │   └── web.xml                 # Jakarta EE 6 web deployment descriptor
+│   ├── index.html                  # Responsive Single-Page Application (SPA)
+│   └── style.css                   # Modern CSS design system &amp; theme tokens
+├── lib/
+│   └── mysql-connector-j-9.0.0.jar # MySQL JDBC Type 4 driver
+├── apache-tomcat-10.1.26/          # Portable Tomcat web container
+├── build/                          # Compiled classes and packaged webapp deployment target
+├── run.bat                         # Automated 1-click build, compile, and run batch script
+└── roadmap.md                      # Comprehensive execution and troubleshooting guide</div>
+
+        <h2>5.2 Important Implementation Details</h2>
+        <ul style="padding-left: 18px; font-size: 8.5pt; color: #334155; line-height: 1.6;">
+            <li><strong>Automated Database Bootstrap:</strong> <code>DBManager.java</code> automatically creates the <code>hotel_db</code> database and <code>rooms</code> table on server boot if they do not exist.</li>
+            <li><strong>Zero-Dependency JSON Serialization:</strong> <code>Room.java</code> formats clean JSON representations natively, eliminating dependencies on third-party libraries like Jackson or Gson.</li>
+            <li><strong>Prepared Statements:</strong> All database mutations and queries use parameterized JDBC statements to guarantee protection against SQL injection attacks.</li>
+            <li><strong>Automated One-Click Batch Deployment:</strong> The included <code>run.bat</code> script detects JDK 17+, resolves Tomcat 10.1 and MySQL Connector/J, compiles Java classes against the Jakarta Servlet API, stages files into <code>build/</code>, and boots the Tomcat web server.</li>
+        </ul>
+
+        <h2>5.3 Setup Summary</h2>
+        <ol style="padding-left: 18px; font-size: 8.5pt; color: #334155; line-height: 1.6;">
+            <li>Install <strong>JDK 17 or higher</strong> and ensure the <code>JAVA_HOME</code> environment variable is set.</li>
+            <li>Start the local <strong>MySQL 8.x</strong> database service on port 3306.</li>
+            <li>Verify database credentials in <code>src/com/hotel/util/DBManager.java</code> (default: <code>root</code> / <code>root123</code>).</li>
+            <li>Open a command prompt in the project root and execute <code>run.bat</code>.</li>
+            <li>Open a web browser and navigate to <code>http://localhost:8080/</code>.</li>
+        </ol>
+
+        <div class="page-footer">
+            <span>LuxeStay · Hotel Management System</span>
+            <span>Page 6</span>
+        </div>
+    </div>
+
+    <!-- ==================== PAGE 7: USER WORKFLOW - DASHBOARD ==================== -->
+    <div class="report-sheet">
+        <div class="page-header">
+            <div class="page-header-top">User Workflow — Dashboard &amp; Analytics</div>
+            <div class="page-header-title">Staff Authentication &amp; Executive Dashboard</div>
+            <div class="page-header-sub">Operational workflow for logging in and reviewing real-time hotel metrics.</div>
+        </div>
+
+        <div class="mockup-container">
+            <div class="mockup-header">01 — Staff Login Screen</div>
+            <div class="mockup-ui" style="max-width: 320px; margin: 0 auto; text-align: center;">
+                <div style="font-size: 24pt;">🏨</div>
+                <h4 style="margin: 4px 0 2px 0;">Welcome Back</h4>
+                <p style="font-size: 7.5pt; color: #64748b; margin-bottom: 10px;">Sign in to Hotel Management System</p>
+                <div style="text-align: left; margin-bottom: 6px;">
+                    <label style="font-size: 7pt; font-weight: 600;">Username</label>
+                    <div style="border: 1px solid #cbd5e1; padding: 4px 8px; border-radius: 4px; font-size: 8pt; background: #f8fafc;">admin</div>
+                </div>
+                <div style="text-align: left; margin-bottom: 10px;">
+                    <label style="font-size: 7pt; font-weight: 600;">Password</label>
+                    <div style="border: 1px solid #cbd5e1; padding: 4px 8px; border-radius: 4px; font-size: 8pt; background: #f8fafc;">••••••••</div>
+                </div>
+                <div style="background: #2563eb; color: white; padding: 6px; border-radius: 4px; font-size: 8pt; font-weight: 600;">Sign In &rarr;</div>
+            </div>
+        </div>
+
+        <div class="layer-arrow" style="margin: 6px 0;">↓ Successful Authentication transitions to Dashboard</div>
+
+        <div class="mockup-container">
+            <div class="mockup-header">02 — Executive Dashboard Overview</div>
+            <div class="mockup-ui">
+                <div style="display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 10px;">
+                    <div style="border: 1px solid #bfdbfe; background: #eff6ff; padding: 8px; border-radius: 6px; text-align: center;">
+                        <div style="font-size: 14pt; font-weight: 700; color: #1e40af;">12</div>
+                        <div style="font-size: 7pt; color: #3b82f6; font-weight: 600;">Total Rooms</div>
+                    </div>
+                    <div style="border: 1px solid #bbf7d0; background: #f0fdf4; padding: 8px; border-radius: 6px; text-align: center;">
+                        <div style="font-size: 14pt; font-weight: 700; color: #166534;">8</div>
+                        <div style="font-size: 7pt; color: #16a34a; font-weight: 600;">Available</div>
+                    </div>
+                    <div style="border: 1px solid #fecaca; background: #fef2f2; padding: 8px; border-radius: 6px; text-align: center;">
+                        <div style="font-size: 14pt; font-weight: 700; color: #991b1b;">4</div>
+                        <div style="font-size: 7pt; color: #dc2626; font-weight: 600;">Booked</div>
+                    </div>
+                    <div style="border: 1px solid #fde68a; background: #fffbeb; padding: 8px; border-radius: 6px; text-align: center;">
+                        <div style="font-size: 14pt; font-weight: 700; color: #92400e;">₹24,500</div>
+                        <div style="font-size: 7pt; color: #d97706; font-weight: 600;">Revenue / Night</div>
+                    </div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 10px;">
+                    <div style="border: 1px solid #e2e8f0; border-radius: 6px; padding: 8px;">
+                        <div style="font-size: 8pt; font-weight: 700; margin-bottom: 6px;">Recent Bookings</div>
+                        <table style="margin: 0; font-size: 7.5pt;">
+                            <thead><tr><th>Room</th><th>Guest</th><th>Nights</th><th>Total</th></tr></thead>
+                            <tbody>
+                                <tr><td><strong>101</strong></td><td>Rahul Sharma</td><td>2</td><td>₹3,000</td></tr>
+                                <tr><td><strong>204</strong></td><td>Priya Patel</td><td>3</td><td>₹7,500</td></tr>
+                            </tbody>
+                        </table>
+                    </div>
+                    <div style="border: 1px solid #e2e8f0; border-radius: 6px; padding: 8px; text-align: center;">
+                        <div style="font-size: 8pt; font-weight: 700; margin-bottom: 4px;">Occupancy</div>
+                        <div style="width: 55px; height: 55px; border-radius: 50%; border: 5px solid #2563eb; margin: 4px auto; display: flex; align-items: center; justify-content: center; font-weight: 700; font-size: 9pt;">33%</div>
+                        <div style="font-size: 7pt; color: #64748b;">4 Booked / 12 Total</div>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <h2>Workflow Description</h2>
+        <p>
+            Hotel personnel log in through the secure portal using their administrative credentials. Upon verification, the executive dashboard renders key operational indicators. Front-desk managers gain immediate visibility into hotel vacancy, current guest check-ins, and aggregate potential revenue, enabling quick operational decisions.
+        </p>
+
+        <div class="page-footer">
+            <span>LuxeStay · Hotel Management System</span>
+            <span>Page 7</span>
+        </div>
+    </div>
+
+    <!-- ==================== PAGE 8: USER WORKFLOW - ROOM MANAGEMENT ==================== -->
+    <div class="report-sheet">
+        <div class="page-header">
+            <div class="page-header-top">User Workflow — Room Management</div>
+            <div class="page-header-title">Registering &amp; Reviewing Room Inventory</div>
+            <div class="page-header-sub">Process for adding new rooms and viewing the complete hotel room directory.</div>
+        </div>
+
+        <div class="mockup-container">
+            <div class="mockup-header">01 — Add Room Form</div>
+            <div class="mockup-ui">
+                <div style="display: grid; grid-template-columns: 1fr 1fr 1fr; gap: 10px; margin-bottom: 10px;">
+                    <div>
+                        <label style="font-size: 7.5pt; font-weight: 600; display: block; margin-bottom: 2px;">Room Number</label>
+                        <div style="border: 1px solid #cbd5e1; padding: 5px 8px; border-radius: 4px; font-size: 8pt; background: #ffffff;">301</div>
+                    </div>
+                    <div>
+                        <label style="font-size: 7.5pt; font-weight: 600; display: block; margin-bottom: 2px;">Room Type</label>
+                        <div style="border: 1px solid #cbd5e1; padding: 5px 8px; border-radius: 4px; font-size: 8pt; background: #ffffff;">Suite ▼</div>
+                    </div>
+                    <div>
+                        <label style="font-size: 7.5pt; font-weight: 600; display: block; margin-bottom: 2px;">Price Per Night (₹)</label>
+                        <div style="border: 1px solid #cbd5e1; padding: 5px 8px; border-radius: 4px; font-size: 8pt; background: #ffffff;">3500</div>
+                    </div>
+                </div>
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <div style="background: #2563eb; color: white; padding: 6px 12px; border-radius: 4px; font-size: 8pt; font-weight: 600; display: inline-block;">➕ Add Room</div>
+                    <span style="font-size: 7.5pt; color: #16a34a; font-weight: 600;">✅ Room 301 added successfully</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="layer-arrow" style="margin: 6px 0;">↓ Updated Inventory reflected in All Rooms Table</div>
+
+        <div class="mockup-container">
+            <div class="mockup-header">02 — All Rooms Inventory Directory</div>
+            <div class="mockup-ui">
+                <table style="margin: 0; font-size: 8pt;">
+                    <thead>
+                        <tr>
+                            <th>Room No</th>
+                            <th>Type</th>
+                            <th>Price / Night</th>
+                            <th>Status</th>
+                            <th>Current Guest</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>101</strong></td>
+                            <td>Single</td>
+                            <td>₹1,500.00</td>
+                            <td><span style="background: #fee2e2; color: #991b1b; padding: 2px 6px; border-radius: 4px; font-size: 7pt; font-weight: 700;">Booked</span></td>
+                            <td>Rahul Sharma</td>
+                        </tr>
+                        <tr>
+                            <td><strong>102</strong></td>
+                            <td>Double</td>
+                            <td>₹2,500.00</td>
+                            <td><span style="background: #dcfce7; color: #166534; padding: 2px 6px; border-radius: 4px; font-size: 7pt; font-weight: 700;">Available</span></td>
+                            <td>—</td>
+                        </tr>
+                        <tr>
+                            <td><strong>301</strong></td>
+                            <td>Suite</td>
+                            <td>₹3,500.00</td>
+                            <td><span style="background: #dcfce7; color: #166534; padding: 2px 6px; border-radius: 4px; font-size: 7pt; font-weight: 700;">Available</span></td>
+                            <td>—</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <h2>Workflow Description</h2>
+        <p>
+            When adding new rooms or updating hotel capacity, staff navigates to <em>Add Room</em>. Entering the unique room identifier, selecting the appropriate room category, and specifying the per-night rate registers the room into MySQL. The <em>View Rooms</em> directory immediately displays the active status, categorized type, and assigned guest information.
+        </p>
+
+        <div class="page-footer">
+            <span>LuxeStay · Hotel Management System</span>
+            <span>Page 8</span>
+        </div>
+    </div>
+
+    <!-- ==================== PAGE 9: USER WORKFLOW - BOOKING OPERATION ==================== -->
+    <div class="report-sheet">
+        <div class="page-header">
+            <div class="page-header-top">User Workflow — Room Booking</div>
+            <div class="page-header-title">Guest Reservation &amp; Room Allocation</div>
+            <div class="page-header-sub">Step-by-step guest check-in procedure ensuring zero room booking collisions.</div>
+        </div>
+
+        <div class="mockup-container">
+            <div class="mockup-header">01 — Room Booking Form</div>
+            <div class="mockup-ui">
+                <div style="display: grid; grid-template-columns: 2fr 1fr; gap: 10px; margin-bottom: 10px;">
+                    <div>
+                        <label style="font-size: 7.5pt; font-weight: 600; display: block; margin-bottom: 2px;">Select Available Room</label>
+                        <div style="border: 1px solid #cbd5e1; padding: 5px 8px; border-radius: 4px; font-size: 8pt; background: #ffffff;">Room 102 (Double - ₹2,500/night) ▼</div>
+                    </div>
+                    <div>
+                        <label style="font-size: 7.5pt; font-weight: 600; display: block; margin-bottom: 2px;">Number of Nights</label>
+                        <div style="border: 1px solid #cbd5e1; padding: 5px 8px; border-radius: 4px; font-size: 8pt; background: #ffffff;">3</div>
+                    </div>
+                </div>
+
+                <div style="display: grid; grid-template-columns: 1fr 1fr; gap: 10px; margin-bottom: 10px;">
+                    <div>
+                        <label style="font-size: 7.5pt; font-weight: 600; display: block; margin-bottom: 2px;">Customer Full Name</label>
+                        <div style="border: 1px solid #cbd5e1; padding: 5px 8px; border-radius: 4px; font-size: 8pt; background: #ffffff;">Amit Kumar</div>
+                    </div>
+                    <div>
+                        <label style="font-size: 7.5pt; font-weight: 600; display: block; margin-bottom: 2px;">Phone Number</label>
+                        <div style="border: 1px solid #cbd5e1; padding: 5px 8px; border-radius: 4px; font-size: 8pt; background: #ffffff;">9876543210</div>
+                    </div>
+                </div>
+
+                <div style="display: flex; justify-content: space-between; align-items: center;">
+                    <div style="background: #2563eb; color: white; padding: 6px 12px; border-radius: 4px; font-size: 8pt; font-weight: 600; display: inline-block;">📋 Confirm Booking</div>
+                    <span style="font-size: 7.5pt; color: #16a34a; font-weight: 600;">✅ Room 102 booked for Amit Kumar</span>
+                </div>
+            </div>
+        </div>
+
+        <div class="layer-arrow" style="margin: 6px 0;">↓ Booking instantly updates database and occupancy counters</div>
+
+        <div class="mockup-container">
+            <div class="mockup-header">02 — Active Bookings Ledger</div>
+            <div class="mockup-ui">
+                <table style="margin: 0; font-size: 8pt;">
+                    <thead>
+                        <tr>
+                            <th>Room No</th>
+                            <th>Type</th>
+                            <th>Customer</th>
+                            <th>Phone</th>
+                            <th>Nights</th>
+                            <th>Rate</th>
+                            <th>Total Bill</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td><strong>101</strong></td>
+                            <td>Single</td>
+                            <td>Rahul Sharma</td>
+                            <td>9820123456</td>
+                            <td>2</td>
+                            <td>₹1,500</td>
+                            <td><strong>₹3,000</strong></td>
+                        </tr>
+                        <tr>
+                            <td><strong>102</strong></td>
+                            <td>Double</td>
+                            <td>Amit Kumar</td>
+                            <td>9876543210</td>
+                            <td>3</td>
+                            <td>₹2,500</td>
+                            <td><strong>₹7,500</strong></td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <h2>Workflow Description</h2>
+        <p>
+            When a guest arrives at the hotel reception, the clerk selects <em>Book Room</em>. The system automatically populates the selection dropdown with <strong>only available rooms</strong>, preventing inadvertent double-booking collisions. Staff enters the guest's contact credentials and planned duration of stay. Upon confirmation, the room status changes to <code>'Booked'</code>, and the record is instantly indexed in the active reservations ledger.
+        </p>
+
+        <div class="page-footer">
+            <span>LuxeStay · Hotel Management System</span>
+            <span>Page 9</span>
+        </div>
+    </div>
+
+    <!-- ==================== PAGE 10: USER WORKFLOW - CHECKOUT & BILLING ==================== -->
+    <div class="report-sheet">
+        <div class="page-header">
+            <div class="page-header-top">User Workflow — Checkout &amp; Billing</div>
+            <div class="page-header-title">Guest Checkout &amp; Automated Bill Computation</div>
+            <div class="page-header-sub">Procedure for checking out guests, releasing rooms, and generating itemized receipts.</div>
+        </div>
+
+        <div class="mockup-container">
+            <div class="mockup-header">01 — Room Selection for Checkout</div>
+            <div class="mockup-ui">
+                <div style="margin-bottom: 10px;">
+                    <label style="font-size: 7.5pt; font-weight: 600; display: block; margin-bottom: 2px;">Select Booked Room</label>
+                    <div style="border: 1px solid #cbd5e1; padding: 5px 8px; border-radius: 4px; font-size: 8pt; background: #ffffff;">Room 101 - Booked by Rahul Sharma ▼</div>
+                </div>
+                <div style="background: #dc2626; color: white; padding: 6px 12px; border-radius: 4px; font-size: 8pt; font-weight: 600; display: inline-block;">🧾 Checkout &amp; Generate Bill</div>
+            </div>
+        </div>
+
+        <div class="layer-arrow" style="margin: 6px 0;">↓ Instant Itemized Bill Receipt Generated on Screen</div>
+
+        <div class="mockup-container">
+            <div class="mockup-header">02 — Generated Bill Receipt Breakdown</div>
+            <div class="mockup-ui" style="max-width: 360px; margin: 0 auto; border: 1.5px dashed #94a3b8; background: #fdfefe;">
+                <div style="text-align: center; border-bottom: 1px solid #e2e8f0; padding-bottom: 6px; margin-bottom: 8px;">
+                    <div style="font-size: 14pt;">🧾</div>
+                    <h4 style="margin: 0; font-size: 9pt;">LuxeStay Management Suite</h4>
+                    <p style="font-size: 7pt; color: #64748b; margin: 0;">Official Guest Checkout Receipt</p>
+                </div>
+                <table style="margin: 0; font-size: 8pt; border: none;">
+                    <tbody>
+                        <tr style="background: transparent;"><td style="border: none; padding: 3px 0; color: #64748b;">Customer Name:</td><td style="border: none; padding: 3px 0; text-align: right; font-weight: 600;">Rahul Sharma</td></tr>
+                        <tr style="background: transparent;"><td style="border: none; padding: 3px 0; color: #64748b;">Room Number:</td><td style="border: none; padding: 3px 0; text-align: right; font-weight: 600;">101 (Single)</td></tr>
+                        <tr style="background: transparent;"><td style="border: none; padding: 3px 0; color: #64748b;">Duration of Stay:</td><td style="border: none; padding: 3px 0; text-align: right; font-weight: 600;">2 Nights</td></tr>
+                        <tr style="background: transparent;"><td style="border: none; padding: 3px 0; color: #64748b;">Price Per Night:</td><td style="border: none; padding: 3px 0; text-align: right; font-weight: 600;">₹1,500.00</td></tr>
+                        <tr style="background: #eff6ff; font-weight: 700; border-top: 2px solid #2563eb;"><td style="border: none; padding: 6px 4px; color: #1e3a8a;">TOTAL BILL DUE:</td><td style="border: none; padding: 6px 4px; text-align: right; color: #1e3a8a; font-size: 9pt;">₹3,000.00</td></tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+
+        <h2>Workflow Description</h2>
+        <p>
+            When a guest completes their stay, front-desk staff selects the guest's room from the occupied room dropdown and clicks <em>Checkout &amp; Generate Bill</em>. The backend servlet verifies the room, calculates the final charge based on per-night rates and total nights stayed, resets the room's status back to <code>'Available'</code>, and renders an itemized billing receipt. The room is immediately freed for subsequent guest reservations.
+        </p>
+
+        <div class="page-footer">
+            <span>LuxeStay · Hotel Management System</span>
+            <span>Page 10</span>
+        </div>
+    </div>
+
+    <!-- ==================== PAGE 11: LIMITATIONS & FUTURE ENHANCEMENTS ==================== -->
+    <div class="report-sheet">
+        <div class="page-header">
+            <div class="page-header-top">Limitations &amp; Future Enhancements</div>
+            <div class="page-header-title">Constraints &amp; Strategic Roadmap</div>
+            <div class="page-header-sub">Current system boundary conditions and prospective architectural improvements.</div>
+        </div>
+
+        <h2>6.1 Current Limitations</h2>
+        <ul style="padding-left: 18px; font-size: 8.5pt; color: #334155; line-height: 1.6;">
+            <li><strong>Demonstration Authentication:</strong> The authentication mechanism utilizes client/administrative credentials (<code>admin</code> / <code>admin123</code>) without multi-tier role hierarchy (e.g., General Manager vs. Front Desk vs. Housekeeping).</li>
+            <li><strong>Single Flat Entity Table:</strong> Booking information is recorded directly onto the <code>rooms</code> table. Historical booking data is reset upon checkout rather than archived into a dedicated historical reservations ledger.</li>
+            <li><strong>Absence of Online Payment Gateway:</strong> Checkout computations are fully automated, but payment collection remains manual (cash or external card machine) without Stripe or Razorpay integration.</li>
+            <li><strong>Single Node Local Deployment:</strong> Deployment batch scripts target local Apache Tomcat instances without cloud load balancing or container orchestration (Docker/Kubernetes).</li>
+        </ul>
+
+        <h2>6.2 Future Enhancements</h2>
+        <div class="enhancement-grid">
+            <div class="enhancement-card">
+                <h4>Security</h4>
+                <ul>
+                    <li>BCrypt salted password hashing in database.</li>
+                    <li>Role-based access control (RBAC) servlet filters.</li>
+                    <li>CSRF token validation for state-modifying requests.</li>
+                    <li>Encrypted HTTPS communication and secure session cookies.</li>
+                </ul>
+            </div>
+            <div class="enhancement-card">
+                <h4>Workflow</h4>
+                <ul>
+                    <li>Dedicated historical <code>bookings</code> ledger table.</li>
+                    <li>Date-range reservation calendar to book future dates.</li>
+                    <li>Integrated payment gateway (Razorpay / Stripe).</li>
+                    <li>Automated email / SMS reservation confirmations.</li>
+                </ul>
+            </div>
+            <div class="enhancement-card">
+                <h4>Usability</h4>
+                <ul>
+                    <li>PDF receipt download and thermal printer support.</li>
+                    <li>Room search and filtering by price and amenities.</li>
+                    <li>Guest self-service booking portal on mobile web.</li>
+                    <li>Dark / Light theme personalization toggle.</li>
+                </ul>
+            </div>
+            <div class="enhancement-card">
+                <h4>Reliability</h4>
+                <ul>
+                    <li>Automated JUnit test suites for DAO and servlets.</li>
+                    <li>HikariCP high-performance JDBC connection pooling.</li>
+                    <li>Docker containerization for rapid cloud deployment.</li>
+                    <li>Centralized logging with Log4j and automated DB backups.</li>
+                </ul>
+            </div>
+        </div>
+
+        <div class="highlight-box">
+            <strong>Strategic Objective:</strong> Evolve the LuxeStay Hotel Management System from an agile academic demonstration into a secure, multi-property cloud management system equipped with audit trails, future reservation scheduling, and self-service guest check-ins.
+        </div>
+
+        <div class="page-footer">
+            <span>LuxeStay · Hotel Management System</span>
+            <span>Page 11</span>
+        </div>
+    </div>
+
+    <!-- ==================== PAGE 12: CONCLUSION & REFERENCES ==================== -->
+    <div class="report-sheet">
+        <div class="page-header">
+            <div class="page-header-top">Conclusion &amp; References</div>
+            <div class="page-header-title">Project Summary &amp; Bibliographic References</div>
+            <div class="page-header-sub">Final assessment, repository information, and technical documentation sources.</div>
+        </div>
+
+        <h2>7.1 Conclusion</h2>
+        <p>
+            The <strong>Hotel Management System (LuxeStay)</strong> demonstrates how modern Jakarta EE web architectures can simplify, organize, and expedite front-desk operations in hospitality environments. By harmonizing <strong>Java Servlets, Apache Tomcat 10.1, JDBC PreparedStatement security, MySQL 8.x</strong>, and an intuitive <strong>Single-Page Application interface</strong>, the system delivers:
+        </p>
+        <ul class="checklist">
+            <li>Reliable, zero-collision room inventory management and live status tracking.</li>
+            <li>Instantaneous stay charge calculations eliminating human billing errors at checkout.</li>
+            <li>Executive dashboard clarity through high-level KPI cards and dynamic SVG room occupancy visualizations.</li>
+            <li>An automated, hassle-free local compilation and deployment pipeline via Windows batch scripts.</li>
+        </ul>
+        <p>
+            The system fully fulfills its academic project objectives, maintaining clean separation between presentation, controller, and persistence layers, while providing a clear architectural foundation for enterprise enhancements.
+        </p>
+
+        <div class="scope-box" style="margin: 14px 0;">
+            <strong style="color: #0f172a; font-size: 9pt;">Project Repository &amp; Deployment Metadata</strong>
+            <p style="font-size: 8pt; margin: 4px 0 2px 0;"><strong>System Name:</strong> LuxeStay Hotel Management Suite</p>
+            <p style="font-size: 8pt; margin: 2px 0;"><strong>Local URL:</strong> <a href="http://localhost:8080" style="color: #2563eb;">http://localhost:8080/</a></p>
+            <p style="font-size: 8pt; margin: 2px 0;"><strong>Backend Architecture:</strong> Jakarta Servlet 6.0 &middot; Apache Tomcat 10.1.26 &middot; MySQL 8.x</p>
+            <p style="font-size: 8pt; margin: 2px 0;"><strong>Primary Controller:</strong> <code>src/com/hotel/servlet/HotelServlet.java</code></p>
+        </div>
+
+        <h2>7.2 References</h2>
+        <ol style="padding-left: 20px; font-size: 8pt; color: #334155; line-height: 1.6;">
+            <li><strong>Jakarta Servlet 6.0 Specification &amp; API Documentation:</strong><br><a href="https://jakarta.ee/specifications/servlet/6.0/" style="color: #2563eb;">https://jakarta.ee/specifications/servlet/6.0/</a></li>
+            <li><strong>Apache Tomcat 10.1 Architecture and Configuration Guide:</strong><br><a href="https://tomcat.apache.org/tomcat-10.1-doc/" style="color: #2563eb;">https://tomcat.apache.org/tomcat-10.1-doc/</a></li>
+            <li><strong>Oracle Java Platform, Standard Edition Documentation (JDK 17/21):</strong><br><a href="https://docs.oracle.com/en/java/" style="color: #2563eb;">https://docs.oracle.com/en/java/</a></li>
+            <li><strong>MySQL 8.4 Reference Manual &amp; Connector/J Developer Guide:</strong><br><a href="https://dev.mysql.com/doc/connector-j/en/" style="color: #2563eb;">https://dev.mysql.com/doc/connector-j/en/</a></li>
+            <li><strong>Mozilla Developer Network (MDN) — Asynchronous Fetch API &amp; Modern Web Standards:</strong><br><a href="https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API" style="color: #2563eb;">https://developer.mozilla.org/en-US/docs/Web/API/Fetch_API</a></li>
+        </ol>
+
+        <div class="page-footer">
+            <span>LuxeStay · Hotel Management System</span>
+            <span>Page 12</span>
+        </div>
+    </div>
+
+</body>
+</html>

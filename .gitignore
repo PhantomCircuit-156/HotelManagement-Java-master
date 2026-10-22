@@ -1,0 +1,28 @@
+# Apache Tomcat (bundled runtime)
+apache-tomcat-*/
+tomcat.zip
+
+# Bundled JDK runtime
+jdk-*/
+*.zip
+
+# Build output
+build/
+
+# IDE files
+.vscode/
+.classpath
+.project
+.settings/
+*.iml
+.idea/
+
+# OS files
+Thumbs.db
+.DS_Store
+
+# Compiled class files
+*.class
+
+# Log files
+*.log
